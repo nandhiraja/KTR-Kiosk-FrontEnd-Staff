@@ -509,6 +509,7 @@ const PaymentPage = () => {
     return (
       <TokenSuccess
         token={kot_code}
+        kot_code={kot_code}
         KDSInvoiceId={KDSInvoiceId}
         orderId={orderId}
         orderDetails={orderDetails}
@@ -579,7 +580,7 @@ const PaymentPage = () => {
 
           <h2 className="payment-heading">Select Payment Method</h2>
 
-        
+
 
           {/* Cash Payment */}
           <div className={`payment-method-card ${selectedMethod === 'cash' ? 'selected' : ''} ${selectedMethod && selectedMethod !== 'cash' ? 'disabled' : ''}`}>
