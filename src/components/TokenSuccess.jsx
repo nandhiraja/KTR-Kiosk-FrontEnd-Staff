@@ -42,7 +42,8 @@ const TokenSuccess = ({
       try {
         // Set printing status and show notification
         const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
-
+        console.log('[TokenSuccess] 🖨️ Starting automated parallel printing...');
+        console.log(orderType);
         setPrintStatus('printing');
         setPrintNotification('Bills are printing...');
         console.log('[TokenSuccess] 🖨️ Starting automated parallel printing...');
