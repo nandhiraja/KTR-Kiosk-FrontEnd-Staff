@@ -41,6 +41,8 @@ const TokenSuccess = ({
     const autoPrintAll = async () => {
       try {
         // Set printing status and show notification
+        const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
+
         setPrintStatus('printing');
         setPrintNotification('Bills are printing...');
         console.log('[TokenSuccess] 🖨️ Starting automated parallel printing...');
@@ -54,7 +56,8 @@ const TokenSuccess = ({
               orderId,
               kot_code,
               KDSInvoiceId,
-              orderDetails
+              orderDetails,
+              orderType
             })
           }),
           fetch('http://localhost:9100/print/coffee-kot', {
@@ -64,7 +67,8 @@ const TokenSuccess = ({
               orderId,
               kot_code,
               KDSInvoiceId,
-              orderDetails
+              orderDetails,
+              orderType
             })
           }),
           fetch('http://localhost:9100/print/bill', {
@@ -75,7 +79,7 @@ const TokenSuccess = ({
               kot_code,
               KDSInvoiceId,
               orderDetails,
-              orderType: orderDetails?.orderType,
+              orderType,
               transactionDetails,
               whatsappNumber: ''
             })
