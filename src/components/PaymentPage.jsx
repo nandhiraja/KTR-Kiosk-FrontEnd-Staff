@@ -541,11 +541,22 @@ const PaymentPage = () => {
 
           <div className="summary-items">
             {orderDetails.items.map((item, idx) => {
-              const itemTotal = (item.price + (item.taxAmount || 0)) * item.quantity;
+              const pricePerUnit = item.pricePerUnit !== undefined ? item.pricePerUnit : ((item.price || 0) + (item.taxAmount || 0));
+              const itemTotal = pricePerUnit * item.quantity;
               return (
                 <div key={idx} className="summary-item-row">
                   <span className="item-name-qty">
-                    {item.itemName} <span className="qty-badge">x{item.quantity}</span>
+                    <div className="summary-item-name">{item.itemName} <span className="qty-badge">x{item.quantity}</span></div>
+                    {item.selectedCustomizations?.variation && (
+                      <div className="summary-item-customization" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                        Variation: {item.selectedCustomizations.variation.name}
+                      </div>
+                    )}
+                    {item.selectedCustomizations?.addons?.length > 0 && (
+                      <div className="summary-item-customization" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                        Add-ons: {item.selectedCustomizations.addons.map(a => a.name).join(', ')}
+                      </div>
+                    )}
                   </span>
                   <span className="item-amount">₹{itemTotal.toFixed(2)}</span>
                 </div>
