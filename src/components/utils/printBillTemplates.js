@@ -1,160 +1,19 @@
-export const generateKOTBill = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
-  return `
-  <html>
-    <head>
-      <title>KOT - ${kot_code}</title>
-      <style>
-            @page {
-          size: 80mm auto;  /* width 80mm, height auto based on content */
-          margin: 3mm;
-          }
-
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        body {
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: 13px;
-          line-height: 1.5;
-          margin: 0;
-          padding: 10px;
-        }
-        .page {
-          width: 90mm;
-          margin: 0 auto;
-          padding: 12px 14px 18px;
-          /*border: 2px solid #000;*/
-          border-radius: 15px;
-        }
-        .center {
-          text-align: center;
-        }
-        .restaurant-name {
-          font-size: 14px;
-          font-weight: bold;
-          margin-bottom: 6px;
-        }
-        .kot-box-wrapper {
-          margin-top: 6px;
-          display: flex;
-          justify-content: center;
-        }
-        .kot-box {
-          border: 2px solid #000;
-          border-radius: 10px;
-          padding: 6px 18px;
-          display: inline-block;
-          font-weight: bold;
-          font-size: 8px;
-          text-transform:uppercase;
-        }
-        .token-no{
-            font-family :poppins;
-            font-size: 18px;
-
-        }
-        .info-line {
-          font-size: 11px;
-          margin: 2px 0;
-        }
-        .label {
-          display: inline-block;
-          min-width: 85px;
-        }
-        .divider {
-          margin: 8px 0;
-          border-bottom: 1px dashed #666;
-        }
-        .items-header,
-        .item-row {
-          font-size: 11px;
-
-        }
-        .items-header {
-          margin: 6px 0 4px;
-          border-bottom: 1px dashed #333;
-          padding-bottom: 3px;
-          font-weight:bold;
-        }
-        .items-header span:first-child,
-        .item-row span:first-child {
-          display: inline-block;
-          width: 30px;
-        }
-        .instruction-title {
-          margin-top: 10px;
-          font-size: 11px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="page">
-        <div class="center">
-          <div class="restaurant-name">Karnataka Tiffin Room (Versova)</div>
-        </div>
-
-        <div class="kot-box-wrapper">
-          <div class="kot-box">
-           <center> KOT No
-            <div class="token-no">${kot_code}</div>
-            </center>
-          </div>
-        </div>
-
-        <div style="margin-top: 10px;">
-          <div class="info-line">
-            <span class="label">BILL TYPE:</span> ${orderDetails.billType || 'Dine In'}
-          </div>
-          <div class="info-line">
-            <span class="label">BILL NO:</span> KTR-${orderId.slice(4, 10)}
-          </div>
-          <div class="info-line">
-            <span class="label">DATE:</span> ${new Date().toLocaleDateString('en-GB')}
-            &nbsp;&nbsp;TIME: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
-          </div>
-          <div class="info-line">
-            <span class="label">KIOSK:</span> ${orderDetails.kiosk || 'KTR1'}
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="items-header">
-          <span>QTY</span>
-          <span>ITEMS</span>
-        </div>
-
-        ${orderDetails.items.map(item => `
-          <div class="item-row">
-            <span>${item.quantity}</span>
-            <span>${item.itemName}</span>
-          </div>
-        `).join('')}
-
-        <div class="divider"></div>
-
-        <div class="instruction-title">
-          Instruction:
-        </div>
-      </div>
-    </body>
-  </html>
-  `;
-};
-
+// Coffee Category ID (from backend) - Only coffee, not beverages
+const COFFEE_CATEGORY_ID = "6868ca5dc29c8ed4d3c98dd8";
 
 
 
 export const generateRestaruentBill = (
   orderId,
   kot_code,
-  KDSInvoiceId,
   orderDetails,
   orderType,
-  transactionDetails,
-  whatsappNumber
+  storeName,
+  ADDRESS_LINE_1,
+  ADDRESS_LINE_2,
+  GST_NUMBER,
+  FSSAI_NUMBER,
+  CIN_NUMBER
 ) => {
   return `
   <html>
@@ -307,12 +166,12 @@ export const generateRestaruentBill = (
         </div>
 
         <div class="center">
-          <div class="branch-name">KTR-Versova</div>
+          <div class="branch-name">${storeName}</div>
           <div class="address-line">
-            Shop no. 202, Society, JP Rd, Aram Nagar Part 2, Machlimar,
+            ${ADDRESS_LINE_1}
           </div>
           <div class="address-line">
-            Versova, Andheri West, Mumbai, Maharashtra 400061
+            ${ADDRESS_LINE_2}
           </div>
           <!-- <div class="section-title">TAX INVOICE</div> -->
         </div>
@@ -326,7 +185,6 @@ export const generateRestaruentBill = (
         <div class="divider-full"></div>
 
         <div class="bill-info">BILL NO: ${orderId}</div>
-        <div>KDS Invoice ID: ${KDSInvoiceId}</div>
 
        <!-- <br/> -->
         <div class="bill-info">DATE: ${new Date().toLocaleDateString('en-GB')}</div>
@@ -376,9 +234,9 @@ export const generateRestaruentBill = (
         </div>
 
         <div class="gst-block">
-          <div class="gst-line">GST No: 27AA0FH7156G1Z0</div>
-          <div class="gst-line">CIN No: 6731</div>
-          <div class="gst-line">FSSAI No: 21524005001190</div>
+          <div class="gst-line">GST No: ${GST_NUMBER}</div>
+          <div class="gst-line">CIN No: ${CIN_NUMBER}</div>
+          <div class="gst-line">FSSAI No: ${FSSAI_NUMBER}</div>
         </div>
 
         <div class="footer">
@@ -389,12 +247,14 @@ export const generateRestaruentBill = (
   </html>
   `;
 };
-// Coffee Category ID (from backend) - Only coffee, not beverages
-const COFFEE_CATEGORY_ID = "6868ca5dc29c8ed4d3c98dd8";
 
-// Generate KOT for non-coffee (food + beverage) items
-export const generateFoodKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
-  // Filter out only coffee items (beverages stay with food)
+
+
+
+
+// Generate KOT for food items
+export const generateFoodKOT = (orderId, kot_code, orderDetails, orderType, storeName) => {
+  // Filter out only food items 
   const foodItems = orderDetails.items.filter(item =>
     item.categoryId !== COFFEE_CATEGORY_ID
   );
@@ -515,7 +375,7 @@ export const generateFoodKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) =
     <body>
       <div class="page">
         <div class="center">
-          <div class="restaurant-name">Karnataka Tiffin Room (Versova)</div>
+          <div class="restaurant-name">Karnataka Tiffin Room (${storeName})</div>
           <div class="logo-wrapper">
            
           </div>
@@ -534,10 +394,10 @@ export const generateFoodKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) =
 
         <div style="margin-top: 10px;">
           <div class="info-line">
-            <span class="label">BILL TYPE:</span> ${orderDetails.billType || 'Dine In'}
+            <span class="label">BILL TYPE:</span> ${orderType}
           </div>
           <div class="info-line">
-            <span class="label">BILL NO:</span> KTR-${orderId.slice(4, 10)}
+            <span class="label">BILL NO:</span> KTR-${orderId}
           </div>
           <div class="info-line">
             <span class="label">DATE:</span> ${new Date().toLocaleDateString('en-GB')}
@@ -574,9 +434,10 @@ export const generateFoodKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) =
 };
 
 
-// Generate KOT for coffee items only (not beverages)
-export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
-  // Filter only coffee items using categoryId (not beverages)
+// Generate KOT for coffee items 
+export const generateCoffeeKOT = (orderId, kot_code, orderDetails, orderType, storeName) => {
+
+  // Filter only coffee items using categoryId 
   const coffeeItems = orderDetails.items.filter(item =>
     item.categoryId === COFFEE_CATEGORY_ID
   );
@@ -692,7 +553,7 @@ export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails)
     <body>
       <div class="page">
         <div class="center">
-          <div class="restaurant-name">Karnataka Tiffin Room (Versova)</div>
+          <div class="restaurant-name">Karnataka Tiffin Room (${storeName})</div>
         </div>
 
         <div class="kot-box-wrapper">
@@ -708,10 +569,10 @@ export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails)
 
         <div style="margin-top: 10px;">
           <div class="info-line">
-            <span class="label">BILL TYPE:</span> ${orderDetails.billType || 'Dine In'}
+            <span class="label">BILL TYPE:</span> ${orderType}
           </div>
           <div class="info-line">
-            <span class="label">BILL NO:</span> KTR-${orderId.slice(4, 10)}
+            <span class="label">BILL NO:</span> KTR-${orderId}
           </div>
           <div class="info-line">
             <span class="label">DATE:</span> ${new Date().toLocaleDateString('en-GB')}
@@ -745,52 +606,5 @@ export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails)
     </body>
   </html>
   `;
-};
-
-
-
-/**
- * Navigation-based print helper for kiosk mode
- * This function initiates the print sequence by navigating to the first print page
- * Each print page will auto-print and navigate to the next in the queue
- * 
- * @param {Function} navigate - React Router navigate function
- * @param {string} orderId - Order ID
- * @param {string} kot_code - KOT code
- * @param {string} KDSInvoiceId - KDS Invoice ID
- * @param {Object} orderDetails - Order details object
- * @param {string} orderType - Order type (DINE IN / TAKE AWAY)
- * @param {Object} transactionDetails - Transaction details
- * @param {string} returnPath - Path to return after all prints complete
- */
-export const startPrintSequence = (navigate, orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails, returnPath = '/payment') => {
-  // Build print queue based on what items exist
-  const printQueue = [];
-
-  // Check if food items exist (non-coffee)
-  const COFFEE_CATEGORY_ID = "6868ca5dc29c8ed4d3c98dd8";
-  const hasFoodItems = orderDetails.items.some(item => item.categoryId !== COFFEE_CATEGORY_ID);
-  const hasCoffeeItems = orderDetails.items.some(item => item.categoryId === COFFEE_CATEGORY_ID);
-
-  if (hasFoodItems) {
-    printQueue.push('food-kot');
-  }
-
-  if (hasCoffeeItems) {
-    printQueue.push('coffee-kot');
-  }
-
-  // Start the print sequence by navigating to bill page
-  navigate(`/print/bill/${orderId}`, {
-    state: {
-      kot_code,
-      KDSInvoiceId,
-      orderDetails,
-      orderType,
-      transactionDetails,
-      printQueue,
-      returnPath
-    }
-  });
 };
 
