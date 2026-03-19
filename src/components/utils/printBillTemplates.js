@@ -311,7 +311,7 @@ export const generateFoodKOT = (orderId, kot_code, orderDetails, orderType, stor
   const foodItems = orderDetails.items.filter(item =>
     item.categoryId !== COFFEE_CATEGORY_ID
   );
-
+  console.log("foodItems", foodItems);
   if (foodItems.length === 0) {
     return null; // No food items to print
   }
@@ -440,7 +440,7 @@ export const generateCoffeeKOT = (orderId, kot_code, orderDetails, orderType, st
   const coffeeItems = orderDetails.items.filter(item =>
     item.categoryId === COFFEE_CATEGORY_ID
   );
-
+  console.log("coffeeItems", coffeeItems);
   if (coffeeItems.length === 0) {
     return null; // No coffee items to print
   }
